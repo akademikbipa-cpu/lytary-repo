@@ -629,8 +629,10 @@ select.pixel-input {
   .dokumen-grid{grid-template-columns:1fr}
 }
 @media(max-width:580px){
-  .sidebar{display:none}
-  .panel{padding:1rem}
-  .surat-card{flex-direction:column;align-items:flex-start}
-  .window-frame.login-frame{margin:.75rem}
+  .sidebar{ display:none; }
+  .main-content{ width:100%; min-width:0; }
+  #screen-dashboard{ display:flex; flex-direction:column; }
+  .panel{ padding:1rem; }
+  .surat-card{ flex-direction:column; align-items:flex-start; }
+  .window-frame.login-frame{ margin:.75rem; }
 }
