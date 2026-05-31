@@ -3,7 +3,7 @@
    Frontend App Logic: app.js  v2.0 — Multi-sheet
    ============================================================ */
 
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbwIPmYU39Vi2U2aROas1kB-cku8cH7Qxp9S8_nZcr59KAWio7SqGb0r81ViPS-dAnjZ7w/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbwIPmYU39Vi2U2aROas1kB-https://script.google.com/macros/s/AKfycbwlPmYU39Vi2U2aROas1kB-cku8cH7Qxp9S8_nZcr59KAWio7SqGb0r81ViPS-dAnjZ7w/exec-dAnjZ7w/exec';
 
 // ── Definisi tab repositori (sheet name → label UI) ──────────
 const REPO_TABS = [
