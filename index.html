@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LYTARY — LAYANAN TERPADU AKADEMIK REPOSITORY</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="scanlines" aria-hidden="true"></div>
+  <div class="crt-vignette" aria-hidden="true"></div>
+
+  <!-- ══════════════ TITLE SCREEN ══════════════ -->
+  <div id="screen-title" class="screen active">
+    <div class="title-container">
+      <div class="title-logo">
+        <div class="logo-pixel-art" aria-hidden="true">
+          <span class="pixel-block c1"></span><span class="pixel-block c2"></span>
+          <span class="pixel-block c3"></span><span class="pixel-block c4"></span>
+          <span class="pixel-block c2"></span><span class="pixel-block c1"></span>
+        </div>
+        <h1 class="game-title">
+          <span class="title-l">L</span><span class="title-y">Y</span>
+          <span class="title-t">T</span><span class="title-a">A</span>
+          <span class="title-r">R</span><span class="title-y2">Y</span>
+        </h1>
+        <p class="title-sub">LAYANAN TERPADU AKADEMIK REPOSITORY</p>
+        <div class="title-divider"></div>
+        <p class="title-credits">DEPARTEMEN BIDANG AKADEMIK · BIPA EDITION © 2026</p>
+      </div>
+      <div class="press-start-wrapper">
+        <button class="btn-press-start blink" id="btn-goto-login">▶ PRESS START ◀</button>
+      </div>
+      <div class="title-footer">© INSERT COIN TO CONTINUE</div>
+    </div>
+  </div>
+
+  <!-- ══════════════ LOGIN SCREEN ══════════════ -->
+  <div id="screen-login" class="screen">
+    <div class="window-frame login-frame">
+      <div class="window-titlebar">
+        <span class="window-icon">🎮</span>
+        <span>PLAYER LOGIN — ENTER YOUR CHEAT CODE</span>
+        <button class="window-close" id="btn-back-title">✕</button>
+      </div>
+      <div class="window-content">
+        <div class="login-avatar blink-slow">▲▼◄►</div>
+        <p class="login-prompt">IDENTIFY YOURSELF, PLAYER!</p>
+        <div class="input-group">
+          <label class="pixel-label">◈ NIDN / USERNAME</label>
+          <input type="text" id="input-nidn" class="pixel-input" placeholder="ENTER NIDN..." autocomplete="off" />
+        </div>
+        <div class="input-group">
+          <label class="pixel-label">◈ PASSWORD / CHEAT CODE</label>
+          <input type="password" id="input-password" class="pixel-input" placeholder="**************" />
+        </div>
+        <div id="login-error" class="error-msg hidden">❌ ACCESS DENIED! WRONG CODE!</div>
+        <div class="login-buttons">
+          <button class="pixel-btn btn-green" id="btn-login">► CONTINUE</button>
+          <button class="pixel-btn btn-red"   id="btn-login-back">◄ BACK</button>
+        </div>
+        <div class="lives-display">LIVES: ❤️ ❤️ ❤️ &nbsp;|&nbsp; HI-SCORE: LYTARY v2.0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ DASHBOARD ══════════════ -->
+  <div id="screen-dashboard" class="screen">
+    <div class="dashboard-layout">
+
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <div class="player-card">
+            <div class="player-sprite">👾</div>
+            <div class="player-info">
+              <div class="player-name" id="sidebar-nama">PLAYER</div>
+              <div class="player-role" id="sidebar-role">ROLE: ---</div>
+              <div class="player-nidn" id="sidebar-nidn">ID: ---</div>
+            </div>
+          </div>
+        </div>
+
+        <nav class="sidebar-nav">
+          <div class="nav-label">── SELECT MENU ──</div>
+          <button class="nav-item active" data-panel="panel-repositori">
+            <span class="nav-icon">📁</span> REPOSITORI
+          </button>
+          <button class="nav-item" data-panel="panel-surat">
+            <span class="nav-icon">✉️</span> SURAT & UNDANGAN
+          </button>
+          <button class="nav-item admin-only hidden" data-panel="panel-admin">
+            <span class="nav-icon">⚙️</span> ADMIN PANEL
+          </button>
+        </nav>
+
+        <div class="sidebar-footer">
+          <button class="pixel-btn btn-red btn-sm" id="btn-logout">⏻ LOGOUT</button>
+          <div class="score-display">SCORE: <span id="score-counter">000000</span></div>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+
+        <!-- HUD Bar -->
+        <div class="hud-bar">
+          <div class="hud-left">
+            <span class="hud-title" id="hud-panel-name">REPOSITORI DOKUMEN</span>
+          </div>
+          <div class="hud-right">
+            <span class="hud-time" id="hud-clock">00:00:00</span>
+            <span class="hud-badge" id="hud-role-badge">PLAYER</span>
+          </div>
+        </div>
+
+        <!-- ────────── PANEL: REPOSITORI ────────── -->
+        <div id="panel-repositori" class="panel active">
+
+          <div class="panel-controls">
+            <span class="pixel-label">SELECT STAGE ▼</span>
+            <button class="pixel-btn btn-cyan btn-sm" id="btn-refresh-dok">↺ RELOAD ALL</button>
+          </div>
+
+          <!-- Tab navigasi sheet — diisi oleh JS -->
+          <div id="repo-tab-container" class="repo-tabs"></div>
+
+          <!-- Isi dokumen tab aktif — diisi oleh JS -->
+          <div id="repo-tab-content" class="dokumen-grid">
+            <div class="loading-state">
+              <div class="loading-sprite">▓▓░░▓▓░░</div>
+              <p>LOADING QUEST ITEMS...</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ────────── PANEL: SURAT & UNDANGAN ────────── -->
+        <div id="panel-surat" class="panel">
+
+          <div class="sub-tabs">
+            <button class="sub-tab active" data-subtab="tab-inbox-st">📜 SURAT TUGAS</button>
+            <button class="sub-tab"        data-subtab="tab-inbox-su">📨 UNDANGAN</button>
+            <button class="sub-tab admin-only hidden" data-subtab="tab-gen-st">⚡ GEN. TUGAS</button>
+            <button class="sub-tab admin-only hidden" data-subtab="tab-gen-su">⚡ GEN. UNDANGAN</button>
+          </div>
+
+          <!-- Inbox Surat Tugas -->
+          <div id="tab-inbox-st" class="sub-panel active">
+            <div id="list-surat-tugas" class="surat-list">
+              <div class="loading-state"><p>FETCHING MAIL...</p></div>
+            </div>
+          </div>
+
+          <!-- Inbox Undangan -->
+          <div id="tab-inbox-su" class="sub-panel">
+            <div id="list-surat-undangan" class="surat-list">
+              <div class="loading-state"><p>FETCHING MAIL...</p></div>
+            </div>
+          </div>
+
+          <!-- Generate Surat Tugas (Admin) -->
+          <div id="tab-gen-st" class="sub-panel">
+            <div class="window-frame form-frame">
+              <div class="window-titlebar"><span>⚡ GENERATE SURAT TUGAS</span></div>
+              <div class="window-content">
+                <div class="form-grid">
+                  <div class="input-group">
+                    <label class="pixel-label">NAMA DOSEN</label>
+                    <input type="text" id="st-nama-dosen" class="pixel-input" placeholder="Dr. Nama Lengkap..." />
+                  </div>
+                  <div class="input-group">
+                    <label class="pixel-label">NIDN DOSEN</label>
+                    <input type="text" id="st-nidn-dosen" class="pixel-input" placeholder="0012345678" />
+                  </div>
+                  <div class="input-group">
+                    <label class="pixel-label">JABATAN</label>
+                    <input type="text" id="st-jabatan" class="pixel-input" placeholder="Dosen Tetap..." />
+                  </div>
+                  <div class="input-group">
+                    <label class="pixel-label">PROGRAM STUDI</label>
+                    <input type="text" id="st-prodi" class="pixel-input" placeholder="Bahasa Indonesia..." />
+                  </div>
+                  <div class="input-group full-width">
+                    <label class="pixel-label">PERIHAL / MISI</label>
+                    <input type="text" id="st-perihal" class="pixel-input" placeholder="Mengajar Mata Kuliah..." />
+                  </div>
+                  <div class="input-group">
+                    <label class="pixel-label">NAMA PENANDATANGAN</label>
+                    <input type="text" id="st-penandatangan" class="pixel-input" placeholder="Wakil Ketua I..." />
+                  </div>
+                  <div class="input-group">
+                    <label class="pixel-label">NIDN PENANDATANGAN</label>
+                    <input type="text" id="st-nidn-ttd" class="pixel-input" placeholder="NIDN..." />
+                  </div>
+                  <div class="input-group full-width">
+                    <label class="pixel-label">KETERANGAN TAMBAHAN</label>
+                    <input type="text" id="st-keterangan" class="pixel-input" placeholder="(opsional)" />
+                  </div>
+                </div>
+                <div id="st-result" class="generate-result hidden"></div>
+                <button class="pixel-btn btn-yellow full-width" id="btn-generate-st">
+                  ⚡ GENERATE SURAT TUGAS
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Generate Surat Undangan (Admin) -->
+          <div id="tab-gen-su" class="sub-panel">
+            <div class="window-frame form-frame">
+              <div class="window-titlebar"><span>⚡ GENERATE SURAT UNDANGAN</span></div>
+              <div class="window-content">
+                <div class="form-grid">
+                  <div class="input-group">
+                    <label class="pixel-label">NAMA DOSEN</label>
+                    <input type="text" id="su-nama-dosen" class="pixel-input" placeholder="Dr. Nama Lengkap..." />
+                  </div>
+                  <div class="input-group">
+                    <label class="pixel-label">NIDN DOSEN</label>
+                    <input type="text" id="su-nidn-dosen" class="pixel-input" placeholder="0012345678" />
+                  </div>
+                  <div class="input-group">
+                    <label class="pixel-label">JABATAN</label>
+                    <input type="text" id="su-jabatan" class="pixel-input" placeholder="Dosen Tetap..." />
+                  </div>
+                  <div class="input-group">
+                    <label class="pixel-label">PROGRAM STUDI</label>
+                    <input type="text" id="su-prodi" class="pixel-input" placeholder="Bahasa Indonesia..." />
+                  </div>
+                  <div class="input-group full-width">
+                    <label class="pixel-label">PERIHAL UNDANGAN</label>
+                    <input type="text" id="su-perihal" class="pixel-input" placeholder="Undangan Rapat..." />
+                  </div>
+                  <div class="input-group">
+                    <label class="pixel-label">NAMA PENANDATANGAN</label>
+                    <input type="text" id="su-penandatangan" class="pixel-input" placeholder="Wakil Ketua I..." />
+                  </div>
+                  <div class="input-group">
+                    <label class="pixel-label">NIDN PENANDATANGAN</label>
+                    <input type="text" id="su-nidn-ttd" class="pixel-input" placeholder="NIDN..." />
+                  </div>
+                  <div class="input-group full-width">
+                    <label class="pixel-label">KETERANGAN TAMBAHAN</label>
+                    <input type="text" id="su-keterangan" class="pixel-input" placeholder="(opsional)" />
+                  </div>
+                </div>
+                <div id="su-result" class="generate-result hidden"></div>
+                <button class="pixel-btn btn-magenta full-width" id="btn-generate-su">
+                  ⚡ GENERATE SURAT UNDANGAN
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /panel-surat -->
+
+        <!-- ────────── PANEL: ADMIN ────────── -->
+        <div id="panel-admin" class="panel">
+          <div class="window-frame form-frame">
+            <div class="window-titlebar">
+              <span>⚙️ ADMIN PANEL — TAMBAH DOKUMEN KE INVENTORY</span>
+            </div>
+            <div class="window-content">
+              <div class="form-grid">
+                <div class="input-group">
+                  <label class="pixel-label">TARGET SHEET</label>
+                  <select id="adm-sheet-select" class="pixel-input">
+                    <!-- diisi JS -->
+                  </select>
+                </div>
+                <div class="input-group">
+                  <label class="pixel-label">KATEGORI</label>
+                  <input type="text" id="adm-kategori" class="pixel-input" placeholder="SOP Akademik / Panduan..." />
+                </div>
+                <div class="input-group full-width">
+                  <label class="pixel-label">JUDUL DOKUMEN</label>
+                  <input type="text" id="adm-judul" class="pixel-input" placeholder="Nama dokumen lengkap..." />
+                </div>
+                <div class="input-group full-width">
+                  <label class="pixel-label">GOOGLE DRIVE FILE ID</label>
+                  <input type="text" id="adm-fileid" class="pixel-input" placeholder="Salin dari URL Drive: drive.google.com/file/d/ ► ID ◄ /view" />
+                </div>
+                <div class="input-group full-width">
+                  <label class="pixel-label">DESKRIPSI</label>
+                  <input type="text" id="adm-deskripsi" class="pixel-input" placeholder="Deskripsi singkat dokumen..." />
+                </div>
+              </div>
+              <div id="adm-result" class="generate-result hidden"></div>
+              <button class="pixel-btn btn-cyan full-width" id="btn-add-dokumen">
+                + ADD TO INVENTORY
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div><!-- /screen-dashboard -->
+
+  <!-- ══════════════ PREVIEW MODAL ══════════════ -->
+  <div id="modal-preview" class="modal hidden">
+    <div class="modal-overlay" id="modal-close-overlay"></div>
+    <div class="modal-window">
+      <div class="window-titlebar">
+        <span id="modal-title">DOCUMENT VIEWER</span>
+        <button class="window-close" id="modal-close-btn">✕ CLOSE</button>
+      </div>
+      <div class="modal-body">
+        <iframe id="preview-iframe" src="" title="Document Preview" allowfullscreen></iframe>
+      </div>
+      <div class="modal-footer">
+        <a id="modal-download-btn" href="#" target="_blank" class="pixel-btn btn-green">⬇ DOWNLOAD FILE</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ TOAST ══════════════ -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
