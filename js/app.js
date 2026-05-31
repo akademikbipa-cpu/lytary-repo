@@ -20,21 +20,28 @@ let repoData     = {};          // { sheetName: [...docs] }
 let activeSheet  = 'Dok_Akademik';
 
 // ============================================================
-//  API HELPERS
+//  API HELPERS — semua via GET untuk bypass CORS GAS
 // ============================================================
 async function apiGet(params) {
   const url = new URL(GAS_URL);
   Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
-  const res = await fetch(url.toString());
+  const res = await fetch(url.toString(), { method: 'GET' });
   return res.json();
 }
 
+// Semua "POST" dikirim via GET dengan data di-encode sebagai param
 async function apiPost(body) {
-  const res = await fetch(GAS_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
-  });
+  const url = new URL(GAS_URL);
+  url.searchParams.set('action', body.action);
+
+  // Kirim field-field spesifik sesuai action
+  if (body.nidn)     url.searchParams.set('nidn',     body.nidn);
+  if (body.password) url.searchParams.set('password', body.password);
+  if (body.sheet)    url.searchParams.set('sheet',    body.sheet);
+  if (body.id)       url.searchParams.set('id',       body.id);
+  if (body.data)     url.searchParams.set('data',     encodeURIComponent(JSON.stringify(body.data)));
+
+  const res = await fetch(url.toString(), { method: 'GET' });
   return res.json();
 }
 
