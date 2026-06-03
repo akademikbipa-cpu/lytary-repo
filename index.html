@@ -3,417 +3,241 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LYTARY — LAYANAN TERPADU AKADEMIK REPOSITORY</title>
+  <title>LYTARY — Layanan Terpadu Akademik Repository</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <style>
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html{font-size:14px}
-    body{font-family:'Plus Jakarta Sans',sans-serif;background:#edfaf8;color:#0f172a;line-height:1.5;min-height:100vh;-webkit-font-smoothing:antialiased}
-    a{text-decoration:none;color:inherit}
-    button{cursor:pointer;font-family:inherit}
-    input,select{font-family:inherit}
-    .scanlines,.crt-vignette{display:none!important}
-
-    /* SCREENS */
-    .screen{display:none!important}
-    .screen.active{display:flex!important}
-
-    /* ── TITLE SCREEN ── */
-    #screen-title{min-height:100vh;align-items:center;justify-content:center;flex-direction:column;background:radial-gradient(ellipse 80% 60% at 60% 40%,rgba(13,148,136,.18) 0%,transparent 70%),linear-gradient(135deg,#0a1628 0%,#0d2e2a 55%,#0a1628 100%);position:relative;overflow:hidden}
-    #screen-title::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(20,184,166,.07) 1px,transparent 1px);background-size:44px 44px;pointer-events:none}
-    .title-container{position:relative;z-index:1;text-align:center;padding:2.5rem 2rem;max-width:520px;width:100%}
-    .logo-pixel-art{display:none}
-    .game-title{font-size:clamp(2.8rem,8vw,5rem);font-weight:800;color:#fff;letter-spacing:-.03em;line-height:1;margin-bottom:.75rem}
-    .game-title span{background:linear-gradient(135deg,#5eead4,#14b8a6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-    .title-sub{color:#2dd4bf;font-size:.75rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;margin-bottom:.75rem}
-    .title-divider{width:44px;height:3px;background:linear-gradient(90deg,#14b8a6,#5eead4);border-radius:99px;margin:1.1rem auto}
-    .title-credits{color:#64748b;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase}
-    .press-start-wrapper{margin:2.25rem 0 1.5rem}
-    .btn-press-start{background:linear-gradient(135deg,#0d9488,#14b8a6);color:#fff;border:none;border-radius:14px;padding:.9rem 2.75rem;font-family:'Plus Jakarta Sans',sans-serif;font-size:1rem;font-weight:700;letter-spacing:.02em;box-shadow:0 4px 20px rgba(13,148,136,.45);transition:transform .2s,box-shadow .2s}
-    .btn-press-start:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(13,148,136,.55)}
-    .btn-press-start.blink{animation:none}
-    .title-footer{color:#334155;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;margin-top:1.25rem}
-
-    /* ── LOGIN SCREEN ── */
-    #screen-login{min-height:100vh;align-items:center;justify-content:center;background:radial-gradient(ellipse 60% 50% at 70% 30%,rgba(13,148,136,.14) 0%,transparent 60%),linear-gradient(160deg,#0a1628 0%,#0d2e2a 100%)}
-    .window-frame.login-frame{background:#fff;border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.25),0 8px 20px rgba(13,148,136,.1);width:100%;max-width:450px;margin:1rem;overflow:hidden;border:1px solid #e2e8f0;animation:slideUp .4s cubic-bezier(.4,0,.2,1) both}
-    @keyframes slideUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
-    .window-titlebar{background:linear-gradient(135deg,#0f766e,#0d9488);color:#fff;padding:1rem 1.35rem;display:flex;align-items:center;gap:.65rem;font-size:.75rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
-    .window-icon{font-size:1rem}
-    .window-titlebar span:not(.window-icon){flex:1}
-    .window-close{background:rgba(255,255,255,.15);border:none;color:#fff;width:27px;height:27px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.78rem;transition:background .15s}
-    .window-close:hover{background:rgba(255,255,255,.28)}
-    .window-content{padding:1.85rem}
-    .login-avatar{font-size:0;text-align:center;margin-bottom:.5rem}
-    .login-avatar.blink-slow{animation:none}
-    .login-avatar::after{content:'🏛️';font-size:2.6rem;display:block}
-    .login-prompt{text-align:center;font-size:.88rem;font-weight:700;color:#0f766e;text-transform:uppercase;letter-spacing:.06em;margin-bottom:1.6rem}
-    .input-group{margin-bottom:1.15rem}
-    .pixel-label{display:block;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#64748b;margin-bottom:.42rem}
-    .pixel-input{width:100%;padding:.68rem .95rem;background:#f8fafc;border:1.5px solid #cbd5e1;border-radius:9px;font-size:.875rem;color:#0f172a;outline:none;transition:border-color .15s,box-shadow .15s}
-    .pixel-input::placeholder{color:#94a3b8}
-    .pixel-input:focus{border-color:#14b8a6;background:#fff;box-shadow:0 0 0 3px rgba(20,184,166,.13)}
-    .error-msg{background:#fef2f2;border:1.5px solid #fecaca;color:#dc2626;border-radius:9px;padding:.68rem .95rem;font-size:.78rem;font-weight:600;margin-bottom:1.1rem}
-    .error-msg.hidden{display:none!important}
-    .login-buttons{display:flex;gap:.65rem;margin-bottom:1.25rem}
-    .lives-display{text-align:center;font-size:.68rem;color:#94a3b8;padding-top:.9rem;border-top:1px solid #e2e8f0}
-
-    /* ── BUTTONS ── */
-    .pixel-btn{display:inline-flex;align-items:center;justify-content:center;gap:.35rem;padding:.62rem 1.25rem;border:none;border-radius:9px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.78rem;font-weight:700;transition:transform .15s,box-shadow .15s;white-space:nowrap;line-height:1;text-decoration:none}
-    .pixel-btn:hover{transform:translateY(-1px)}
-    .pixel-btn:active{transform:translateY(0)}
-    .pixel-btn:disabled{opacity:.55;cursor:not-allowed;transform:none!important}
-    .btn-green{background:linear-gradient(135deg,#0d9488,#14b8a6);color:#fff;box-shadow:0 2px 10px rgba(13,148,136,.3);flex:1}
-    .btn-green:hover{box-shadow:0 4px 16px rgba(13,148,136,.42)}
-    .btn-red{background:#f1f5f9;color:#475569;border:1.5px solid #cbd5e1;flex:1}
-    .btn-red:hover{background:#fef2f2;color:#dc2626;border-color:#fecaca}
-    .btn-cyan{background:linear-gradient(135deg,#14b8a6,#2dd4bf);color:#fff;box-shadow:0 2px 8px rgba(20,184,166,.28)}
-    .btn-cyan:hover{box-shadow:0 4px 14px rgba(20,184,166,.4)}
-    .btn-yellow{background:linear-gradient(135deg,#b45309,#d97706);color:#fff;box-shadow:0 2px 8px rgba(217,119,6,.28)}
-    .btn-yellow:hover{box-shadow:0 4px 14px rgba(217,119,6,.4)}
-    .btn-magenta{background:linear-gradient(135deg,#6d28d9,#7c3aed);color:#fff;box-shadow:0 2px 8px rgba(109,40,217,.28)}
-    .btn-magenta:hover{box-shadow:0 4px 14px rgba(109,40,217,.4)}
-    .btn-sm{padding:.4rem .8rem;font-size:.72rem}
-    .full-width{width:100%;margin-top:.45rem}
-
-    /* ── DASHBOARD ── */
-    #screen-dashboard{flex-direction:row!important;min-height:100vh;width:100%;background:#edfaf8}
-    .dashboard-layout{display:flex;flex-direction:row;width:100%;min-height:100vh}
-
-    /* ── SIDEBAR ── */
-    .sidebar{width:258px;min-width:258px;background:#0f172a;display:flex;flex-direction:column;height:100vh;position:sticky;top:0;overflow-y:auto;flex-shrink:0;border-right:1px solid rgba(255,255,255,.05)}
-    .sidebar-header{padding:1.2rem 1rem;border-bottom:1px solid rgba(255,255,255,.07)}
-    .player-card{display:flex;align-items:center;gap:.8rem;background:rgba(255,255,255,.06);border-radius:10px;padding:.8rem .95rem}
-    .player-sprite{width:42px;height:42px;background:linear-gradient(135deg,#0f766e,#0d9488);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0}
-    .player-info{min-width:0;flex:1}
-    .player-name{font-size:.8rem;font-weight:700;color:#fff;margin-bottom:.14rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .player-role{font-size:.62rem;color:#2dd4bf;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
-    .player-nidn{font-size:.62rem;color:#475569;font-family:'DM Mono',monospace;margin-top:.1rem}
-    .sidebar-nav{flex:1;padding:.9rem .72rem}
-    .nav-label{font-size:.58rem;color:#475569;letter-spacing:.1em;text-transform:uppercase;font-weight:600;padding:0 .5rem;margin-bottom:.42rem}
-    .nav-item{display:flex;align-items:center;gap:.58rem;width:100%;padding:.62rem .8rem;border:1.5px solid transparent;border-radius:9px;background:transparent;color:rgba(255,255,255,.5);font-family:'Plus Jakarta Sans',sans-serif;font-size:.78rem;font-weight:600;margin-bottom:.2rem;text-align:left;transition:all .15s}
-    .nav-item:hover{background:rgba(255,255,255,.06);color:#fff}
-    .nav-item.active{background:rgba(13,148,136,.2);color:#5eead4;border-color:rgba(20,184,166,.25)}
-    .nav-icon{font-size:.9rem}
-    .sidebar-footer{padding:.9rem 1rem 1.3rem;border-top:1px solid rgba(255,255,255,.07)}
-    .sidebar-footer .btn-red{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.22);color:#f87171;width:100%;flex:unset;margin-bottom:.6rem}
-    .sidebar-footer .btn-red:hover{background:rgba(239,68,68,.2)}
-    .score-display{text-align:center;font-size:.65rem;color:#334155;font-family:'DM Mono',monospace;letter-spacing:.04em}
-    #score-counter{color:#2dd4bf}
-
-    /* ── MAIN CONTENT ── */
-    .main-content{flex:1 1 0%;min-width:0;display:flex;flex-direction:column;min-height:100vh;background:#edfaf8}
-
-    /* ── HUD BAR ── */
-    .hud-bar{background:#fff;border-bottom:1px solid #e2e8f0;padding:.82rem 1.6rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(13,148,136,.06);flex-shrink:0}
-    .hud-left{display:flex;align-items:center}
-    .hud-title{font-size:.86rem;font-weight:700;color:#0f172a}
-    .hud-right{display:flex;align-items:center;gap:.6rem}
-    .hud-time{font-family:'DM Mono',monospace;font-size:.72rem;color:#64748b;background:#f1f5f9;padding:.28rem .72rem;border-radius:99px;border:1px solid #e2e8f0}
-    .hud-badge{background:linear-gradient(135deg,#0d9488,#14b8a6);color:#fff;font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.28rem .85rem;border-radius:99px}
-
-    /* ── PANELS ── */
-    .panel{display:none;padding:1.6rem;overflow-y:auto;flex:1}
-    .panel.active{display:block!important}
-    .panel-controls{display:flex;align-items:center;gap:.65rem;margin-bottom:1.1rem}
-    .panel-controls .pixel-label{margin:0}
-
-    /* ── REPO TABS ── */
-    .repo-tabs{display:flex;gap:.42rem;margin-bottom:1.3rem;flex-wrap:wrap}
-    .repo-tab{display:flex;align-items:center;gap:.42rem;padding:.52rem 1rem;border-radius:9px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.74rem;font-weight:600;cursor:pointer;border:1.5px solid #cbd5e1;background:#fff;color:#64748b;transition:all .15s}
-    .repo-tab:hover{border-color:#14b8a6;color:#0f766e;background:#f0fdfa}
-    .repo-tab.active{background:linear-gradient(135deg,#0d9488,#14b8a6);color:#fff;border-color:transparent;box-shadow:0 2px 10px rgba(13,148,136,.28)}
-    .repo-tab.active .repo-tab-count{background:rgba(255,255,255,.25);color:#fff}
-    .repo-tab-count{background:#f1f5f9;color:#64748b;font-size:.62rem;font-weight:700;padding:1px 6px;border-radius:99px;min-width:18px;text-align:center}
-
-    /* ── DOKUMEN GRID ── */
-    .dokumen-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem}
-    .dokumen-card{background:#fff;border:1px solid #e2e8f0;border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06),0 1px 2px rgba(13,148,136,.04);transition:box-shadow .2s,transform .2s;display:flex;flex-direction:column}
-    .dokumen-card:hover{box-shadow:0 8px 24px rgba(13,148,136,.12),0 4px 8px rgba(0,0,0,.06);transform:translateY(-2px)}
-    .dokumen-card::before{content:'';display:block;height:4px}
-    .dokumen-card.accent-cyan::before{background:linear-gradient(90deg,#0d9488,#5eead4)}
-    .dokumen-card.accent-green::before{background:linear-gradient(90deg,#059669,#34d399)}
-    .dokumen-card.accent-yellow::before{background:linear-gradient(90deg,#b45309,#fbbf24)}
-    .dokumen-card.accent-magenta::before{background:linear-gradient(90deg,#6d28d9,#a78bfa)}
-    .dokumen-card-body{padding:1rem 1.15rem 1.15rem;display:flex;flex-direction:column;flex:1}
-    .dokumen-badge{display:inline-block;font-size:.6rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.22rem .65rem;border-radius:99px;margin-bottom:.65rem;width:fit-content;border:1px solid}
-    .badge-cyan{background:#f0fdfa;color:#0f766e;border-color:#99f6e4}
-    .badge-green{background:#ecfdf5;color:#065f46;border-color:#a7f3d0}
-    .badge-yellow{background:#fffbeb;color:#92400e;border-color:#fde68a}
-    .badge-magenta{background:#f5f3ff;color:#5b21b6;border-color:#ddd6fe}
-    .dokumen-title{font-size:.84rem;font-weight:700;color:#0f172a;margin-bottom:.42rem;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-    .dokumen-desc{font-size:.74rem;color:#64748b;line-height:1.5;flex:1;margin-bottom:.78rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-    .dokumen-date{font-size:.66rem;color:#94a3b8;margin-bottom:.78rem;font-family:'DM Mono',monospace}
-    .dokumen-actions{display:flex;gap:.42rem;flex-wrap:wrap}
-
-    /* ── LOADING / EMPTY ── */
-    .loading-state{grid-column:1/-1;text-align:center;padding:3.5rem 1rem;color:#94a3b8}
-    .loading-sprite{display:none}
-    .loading-state::before{content:'⏳';display:block;font-size:2rem;margin-bottom:.7rem}
-    .loading-state p{font-size:.82rem}
-    .empty-state{grid-column:1/-1;text-align:center;padding:3.5rem 1rem;color:#94a3b8;background:#fff;border-radius:14px;border:2px dashed #e2e8f0;font-size:.82rem;line-height:1.8}
-
-    /* ── SUB TABS ── */
-    .sub-tabs{display:flex;gap:.42rem;margin-bottom:1.3rem;flex-wrap:wrap;border-bottom:1px solid #e2e8f0;padding-bottom:.68rem}
-    .sub-tab{padding:.46rem 1.05rem;border:1.5px solid transparent;border-radius:9px;background:transparent;font-family:'Plus Jakarta Sans',sans-serif;font-size:.74rem;font-weight:600;color:#64748b;transition:all .15s}
-    .sub-tab:hover{background:#f1f5f9;color:#0f172a}
-    .sub-tab.active{background:#f0fdfa;color:#0f766e;border-color:#99f6e4}
-    .sub-panel{display:none}
-    .sub-panel.active{display:block!important}
-
-    /* ── SURAT CARDS ── */
-    .surat-list{display:flex;flex-direction:column;gap:.78rem}
-    .surat-card{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:.92rem 1.15rem;display:flex;align-items:center;gap:.9rem;box-shadow:0 1px 4px rgba(0,0,0,.05);transition:box-shadow .15s,transform .15s}
-    .surat-card:hover{box-shadow:0 4px 14px rgba(13,148,136,.1);transform:translateY(-1px)}
-    .surat-nomor{font-family:'DM Mono',monospace;font-size:.65rem;color:#0f766e;background:#f0fdfa;border:1px solid #99f6e4;padding:.35rem .62rem;border-radius:8px;min-width:74px;text-align:center;line-height:1.4;flex-shrink:0}
-    .surat-info{flex:1;min-width:0}
-    .surat-perihal{font-size:.83rem;font-weight:600;color:#0f172a;margin-bottom:.26rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .surat-meta{font-size:.68rem;color:#94a3b8}
-    .surat-actions{display:flex;gap:.42rem;flex-shrink:0}
-
-    /* ── FORMS ── */
-    .window-frame.form-frame{background:#fff;border:1px solid #e2e8f0;border-radius:16px;box-shadow:0 4px 16px rgba(13,148,136,.07);overflow:hidden}
-    .form-frame .window-titlebar{font-size:.74rem}
-    .form-frame .window-content{padding:1.5rem}
-    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:1rem}
-    .form-grid .full-width{grid-column:1/-1;margin-top:0}
-    .form-grid .input-group{margin:0}
-    select.pixel-input{appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .9rem center;padding-right:2.4rem}
-    .generate-result{border-radius:9px;padding:.88rem 1.05rem;font-size:.78rem;font-weight:500;margin-bottom:.9rem;line-height:1.7;border:1.5px solid}
-    .generate-result.hidden{display:none!important}
-
-    /* ── MODAL ── */
-    .modal{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:1rem}
-    .modal.hidden{display:none!important}
-    .modal-overlay{position:absolute;inset:0;background:rgba(15,23,42,.6);backdrop-filter:blur(4px)}
-    .modal-window{position:relative;z-index:1;background:#fff;border-radius:18px;box-shadow:0 24px 48px rgba(0,0,0,.2);width:100%;max-width:780px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;border:1px solid #e2e8f0;animation:slideUp .3s cubic-bezier(.4,0,.2,1) both}
-    .modal-body{flex:1;overflow:hidden;background:#f8fafc}
-    .modal-body iframe{width:100%;height:510px;border:none;display:block}
-    .modal-footer{padding:.9rem 1.35rem;border-top:1px solid #e2e8f0;display:flex;justify-content:flex-end}
-
-    /* ── TOAST ── */
-    .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:#0f172a;color:#fff;padding:.78rem 1.3rem;border-radius:14px;font-size:.78rem;font-weight:600;box-shadow:0 10px 28px rgba(0,0,0,.2);z-index:2000;border-left:3px solid #14b8a6;max-width:310px;animation:toastIn .25s ease both}
-    .toast.hidden{display:none!important}
-    .toast.error{border-left-color:#ef4444}
-    .toast.info{border-left-color:#3b82f6}
-    @keyframes toastIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:translateX(0)}}
-
-    /* ── UTILITIES ── */
-    .hidden{display:none!important}
-    .admin-only.hidden{display:none!important}
-    ::-webkit-scrollbar{width:5px;height:5px}
-    ::-webkit-scrollbar-track{background:transparent}
-    ::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:99px}
-    ::-webkit-scrollbar-thumb:hover{background:#14b8a6}
-
-    @media(max-width:768px){
-      .form-grid{grid-template-columns:1fr}
-      .panel{padding:1.25rem}
-      .dokumen-grid{grid-template-columns:1fr}
-    }
-    @media(max-width:600px){
-      .sidebar{display:none}
-      .main-content{width:100%}
-      .panel{padding:1rem}
-      .surat-card{flex-direction:column;align-items:flex-start}
-      .window-frame.login-frame{margin:.75rem}
-    }
-  </style>
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
-  <!-- TITLE SCREEN -->
+  <!-- ══════════════════════════════════════
+       SCREEN 1: TITLE
+  ══════════════════════════════════════ -->
   <div id="screen-title" class="screen active">
     <div class="title-container">
-      <div class="title-logo">
-        <div class="logo-pixel-art" aria-hidden="true"></div>
-        <h1 class="game-title">
-          <span class="title-l">L</span><span class="title-y">Y</span>
-          <span class="title-t">T</span><span class="title-a">A</span>
-          <span class="title-r">R</span><span class="title-y2">Y</span>
-        </h1>
-        <p class="title-sub">LAYANAN TERPADU AKADEMIK REPOSITORY</p>
-        <div class="title-divider"></div>
-        <p class="title-credits">WAKIL KETUA I BIDANG AKADEMIK · BIPA EDITION © 2026</p>
-      </div>
+      <h1 class="game-title">
+        <span>L</span><span>Y</span><span>T</span><span>A</span><span>R</span><span>Y</span>
+      </h1>
+      <p class="title-sub">LAYANAN TERPADU AKADEMIK REPOSITORY</p>
+      <div class="title-divider"></div>
+      <p class="title-credits">WAKIL KETUA I BIDANG AKADEMIK · BIPA EDITION © 2026</p>
       <div class="press-start-wrapper">
-        <button class="btn-press-start blink" id="btn-goto-login">▶ PRESS START ◀</button>
+        <button class="btn-press-start" id="btn-goto-login">▶ PRESS START ◀</button>
       </div>
       <div class="title-footer">© LYTARY v2.0</div>
     </div>
   </div>
 
-  <!-- LOGIN SCREEN -->
+  <!-- ══════════════════════════════════════
+       SCREEN 2: LOGIN
+  ══════════════════════════════════════ -->
   <div id="screen-login" class="screen">
-    <div class="window-frame login-frame">
-      <div class="window-titlebar">
-        <span class="window-icon">🎮</span>
-        <span>PLAYER LOGIN — ENTER YOUR CHEAT CODE</span>
-        <button class="window-close" id="btn-back-title">✕</button>
+    <div class="login-card">
+      <div class="login-card-header">
+        <span>🎮</span>
+        <span>PLAYER LOGIN</span>
+        <button class="btn-icon" id="btn-back-title">✕</button>
       </div>
-      <div class="window-content">
-        <div class="login-avatar blink-slow">▲▼◄►</div>
+      <div class="login-card-body">
+        <div class="login-avatar">🏛️</div>
         <p class="login-prompt">IDENTIFY YOURSELF, PLAYER!</p>
+
         <div class="input-group">
-          <label class="pixel-label">◈ NIDN / USERNAME</label>
-          <input type="text" id="input-nidn" class="pixel-input" placeholder="ENTER NIDN..." autocomplete="off" />
+          <label class="field-label">◈ NIDN / USERNAME</label>
+          <input type="text" id="input-nidn" class="field-input" placeholder="ENTER NIDN..." autocomplete="off" />
         </div>
         <div class="input-group">
-          <label class="pixel-label">◈ PASSWORD / CHEAT CODE</label>
-          <input type="password" id="input-password" class="pixel-input" placeholder="**************" />
+          <label class="field-label">◈ PASSWORD</label>
+          <input type="password" id="input-password" class="field-input" placeholder="••••••••••••••" />
         </div>
-        <div id="login-error" class="error-msg hidden">❌ ACCESS DENIED! WRONG CODE!</div>
-        <div class="login-buttons">
-          <button class="pixel-btn btn-green" id="btn-login">► CONTINUE</button>
-          <button class="pixel-btn btn-red" id="btn-login-back">◄ BACK</button>
+
+        <div id="login-error" class="alert alert-error hidden">❌ ACCESS DENIED! WRONG CODE!</div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" id="btn-login">► CONTINUE</button>
+          <button class="btn btn-ghost" id="btn-login-back">◄ BACK</button>
         </div>
-        <div class="lives-display">LIVES: ❤️ ❤️ ❤️ &nbsp;|&nbsp; HI-SCORE: LYTARY v2.0</div>
+        <p class="login-footer">LIVES: ❤️ ❤️ ❤️ &nbsp;|&nbsp; LYTARY v2.0</p>
       </div>
     </div>
   </div>
 
-  <!-- DASHBOARD -->
+  <!-- ══════════════════════════════════════
+       SCREEN 3: DASHBOARD
+  ══════════════════════════════════════ -->
   <div id="screen-dashboard" class="screen">
-    <div class="dashboard-layout">
+    <div class="app-layout">
 
+      <!-- SIDEBAR -->
       <aside class="sidebar">
-        <div class="sidebar-header">
+        <div class="sidebar-top">
           <div class="player-card">
-            <div class="player-sprite">👾</div>
+            <div class="player-avatar">👾</div>
             <div class="player-info">
               <div class="player-name" id="sidebar-nama">PLAYER</div>
-              <div class="player-role" id="sidebar-role">ROLE: ---</div>
-              <div class="player-nidn" id="sidebar-nidn">ID: ---</div>
+              <div class="player-role" id="sidebar-role">ROLE: —</div>
+              <div class="player-nidn" id="sidebar-nidn">ID: —</div>
             </div>
           </div>
         </div>
+
         <nav class="sidebar-nav">
-          <div class="nav-label">── SELECT MENU ──</div>
-          <button class="nav-item active" data-panel="panel-repositori"><span class="nav-icon">📁</span> REPOSITORI</button>
-          <button class="nav-item" data-panel="panel-surat"><span class="nav-icon">✉️</span> SURAT & UNDANGAN</button>
-          <button class="nav-item admin-only hidden" data-panel="panel-admin"><span class="nav-icon">⚙️</span> ADMIN PANEL</button>
+          <div class="nav-section-label">── SELECT MENU ──</div>
+          <button class="nav-item active" data-panel="panel-repositori">
+            <span>📁</span> REPOSITORI
+          </button>
+          <button class="nav-item" data-panel="panel-surat">
+            <span>✉️</span> SURAT & UNDANGAN
+          </button>
+          <button class="nav-item admin-only hidden" data-panel="panel-admin">
+            <span>⚙️</span> ADMIN PANEL
+          </button>
         </nav>
-        <div class="sidebar-footer">
-          <button class="pixel-btn btn-red btn-sm" id="btn-logout">⏻ LOGOUT</button>
+
+        <div class="sidebar-bottom">
+          <button class="btn btn-danger btn-sm w-full" id="btn-logout">⏻ LOGOUT</button>
           <div class="score-display">SCORE: <span id="score-counter">000000</span></div>
         </div>
       </aside>
 
+      <!-- MAIN CONTENT -->
       <main class="main-content">
+
+        <!-- HUD BAR -->
         <div class="hud-bar">
-          <div class="hud-left"><span class="hud-title" id="hud-panel-name">REPOSITORI DOKUMEN</span></div>
+          <span class="hud-title" id="hud-panel-name">REPOSITORI DOKUMEN</span>
           <div class="hud-right">
-            <span class="hud-time" id="hud-clock">00:00:00</span>
+            <span class="hud-clock" id="hud-clock">00:00:00</span>
             <span class="hud-badge" id="hud-role-badge">PLAYER</span>
           </div>
         </div>
 
-        <!-- PANEL REPOSITORI -->
+        <!-- ── PANEL: REPOSITORI ── -->
         <div id="panel-repositori" class="panel active">
-          <div class="panel-controls">
-            <span class="pixel-label">SELECT STAGE ▼</span>
-            <button class="pixel-btn btn-cyan btn-sm" id="btn-refresh-dok">↺ RELOAD ALL</button>
+          <div class="panel-toolbar">
+            <span class="field-label">SELECT STAGE ▼</span>
+            <button class="btn btn-cyan btn-sm" id="btn-refresh-dok">↺ RELOAD</button>
           </div>
-          <div id="repo-tab-container" class="repo-tabs"></div>
-          <div id="repo-tab-content" class="dokumen-grid">
-            <div class="loading-state"><div class="loading-sprite"></div><p>LOADING DOKUMEN...</p></div>
+          <div id="repo-tabs" class="repo-tabs"></div>
+          <div id="repo-content" class="doc-grid">
+            <div class="state-loading"><p>LOADING DOKUMEN...</p></div>
           </div>
         </div>
 
-        <!-- PANEL SURAT -->
+        <!-- ── PANEL: SURAT ── -->
         <div id="panel-surat" class="panel">
           <div class="sub-tabs">
-            <button class="sub-tab active" data-subtab="tab-inbox-st">📜 SURAT TUGAS</button>
-            <button class="sub-tab" data-subtab="tab-inbox-su">📨 UNDANGAN</button>
+            <button class="sub-tab active" data-subtab="tab-surat-tugas">📜 SURAT TUGAS</button>
+            <button class="sub-tab" data-subtab="tab-surat-undangan">📨 UNDANGAN</button>
             <button class="sub-tab admin-only hidden" data-subtab="tab-gen-st">⚡ GEN. TUGAS</button>
             <button class="sub-tab admin-only hidden" data-subtab="tab-gen-su">⚡ GEN. UNDANGAN</button>
           </div>
-          <div id="tab-inbox-st" class="sub-panel active">
-            <div id="list-surat-tugas" class="surat-list"><div class="loading-state"><p>FETCHING MAIL...</p></div></div>
+
+          <div id="tab-surat-tugas" class="sub-panel active">
+            <div id="list-surat-tugas" class="surat-list">
+              <div class="state-loading"><p>FETCHING MAIL...</p></div>
+            </div>
           </div>
-          <div id="tab-inbox-su" class="sub-panel">
-            <div id="list-surat-undangan" class="surat-list"><div class="loading-state"><p>FETCHING MAIL...</p></div></div>
+
+          <div id="tab-surat-undangan" class="sub-panel">
+            <div id="list-surat-undangan" class="surat-list">
+              <div class="state-loading"><p>FETCHING MAIL...</p></div>
+            </div>
           </div>
+
           <div id="tab-gen-st" class="sub-panel">
-            <div class="window-frame form-frame">
-              <div class="window-titlebar"><span>⚡ GENERATE SURAT TUGAS</span></div>
-              <div class="window-content">
+            <div class="card form-card">
+              <div class="card-header">⚡ GENERATE SURAT TUGAS</div>
+              <div class="card-body">
                 <div class="form-grid">
-                  <div class="input-group"><label class="pixel-label">NAMA DOSEN</label><input type="text" id="st-nama-dosen" class="pixel-input" placeholder="Dr. Nama Lengkap..." /></div>
-                  <div class="input-group"><label class="pixel-label">NIDN DOSEN</label><input type="text" id="st-nidn-dosen" class="pixel-input" placeholder="0012345678" /></div>
-                  <div class="input-group"><label class="pixel-label">JABATAN</label><input type="text" id="st-jabatan" class="pixel-input" placeholder="Dosen Tetap..." /></div>
-                  <div class="input-group"><label class="pixel-label">PROGRAM STUDI</label><input type="text" id="st-prodi" class="pixel-input" placeholder="Bahasa Indonesia..." /></div>
-                  <div class="input-group full-width"><label class="pixel-label">PERIHAL / MISI</label><input type="text" id="st-perihal" class="pixel-input" placeholder="Mengajar Mata Kuliah..." /></div>
-                  <div class="input-group"><label class="pixel-label">NAMA PENANDATANGAN</label><input type="text" id="st-penandatangan" class="pixel-input" placeholder="Wakil Ketua I..." /></div>
-                  <div class="input-group"><label class="pixel-label">NIDN PENANDATANGAN</label><input type="text" id="st-nidn-ttd" class="pixel-input" placeholder="NIDN..." /></div>
-                  <div class="input-group full-width"><label class="pixel-label">KETERANGAN TAMBAHAN</label><input type="text" id="st-keterangan" class="pixel-input" placeholder="(opsional)" /></div>
+                  <div class="input-group"><label class="field-label">NAMA DOSEN</label><input type="text" id="st-nama" class="field-input" placeholder="Dr. Nama Lengkap..." /></div>
+                  <div class="input-group"><label class="field-label">NIDN DOSEN</label><input type="text" id="st-nidn" class="field-input" placeholder="0012345678" /></div>
+                  <div class="input-group"><label class="field-label">JABATAN</label><input type="text" id="st-jabatan" class="field-input" placeholder="Dosen Tetap..." /></div>
+                  <div class="input-group"><label class="field-label">PROGRAM STUDI</label><input type="text" id="st-prodi" class="field-input" placeholder="Bahasa Indonesia..." /></div>
+                  <div class="input-group span-2"><label class="field-label">PERIHAL / MISI</label><input type="text" id="st-perihal" class="field-input" placeholder="Mengajar Mata Kuliah..." /></div>
+                  <div class="input-group"><label class="field-label">NAMA PENANDATANGAN</label><input type="text" id="st-penandatangan" class="field-input" placeholder="Wakil Ketua I..." /></div>
+                  <div class="input-group"><label class="field-label">NIDN PENANDATANGAN</label><input type="text" id="st-nidn-ttd" class="field-input" placeholder="NIDN..." /></div>
+                  <div class="input-group span-2"><label class="field-label">KETERANGAN TAMBAHAN</label><input type="text" id="st-keterangan" class="field-input" placeholder="(opsional)" /></div>
                 </div>
-                <div id="st-result" class="generate-result hidden"></div>
-                <button class="pixel-btn btn-yellow full-width" id="btn-generate-st">⚡ GENERATE SURAT TUGAS</button>
+                <div id="st-result" class="alert hidden"></div>
+                <button class="btn btn-warning w-full mt-1" id="btn-gen-st">⚡ GENERATE SURAT TUGAS</button>
               </div>
             </div>
           </div>
+
           <div id="tab-gen-su" class="sub-panel">
-            <div class="window-frame form-frame">
-              <div class="window-titlebar"><span>⚡ GENERATE SURAT UNDANGAN</span></div>
-              <div class="window-content">
+            <div class="card form-card">
+              <div class="card-header">⚡ GENERATE SURAT UNDANGAN</div>
+              <div class="card-body">
                 <div class="form-grid">
-                  <div class="input-group"><label class="pixel-label">NAMA DOSEN</label><input type="text" id="su-nama-dosen" class="pixel-input" placeholder="Dr. Nama Lengkap..." /></div>
-                  <div class="input-group"><label class="pixel-label">NIDN DOSEN</label><input type="text" id="su-nidn-dosen" class="pixel-input" placeholder="0012345678" /></div>
-                  <div class="input-group"><label class="pixel-label">JABATAN</label><input type="text" id="su-jabatan" class="pixel-input" placeholder="Dosen Tetap..." /></div>
-                  <div class="input-group"><label class="pixel-label">PROGRAM STUDI</label><input type="text" id="su-prodi" class="pixel-input" placeholder="Bahasa Indonesia..." /></div>
-                  <div class="input-group full-width"><label class="pixel-label">PERIHAL UNDANGAN</label><input type="text" id="su-perihal" class="pixel-input" placeholder="Undangan Rapat..." /></div>
-                  <div class="input-group"><label class="pixel-label">NAMA PENANDATANGAN</label><input type="text" id="su-penandatangan" class="pixel-input" placeholder="Wakil Ketua I..." /></div>
-                  <div class="input-group"><label class="pixel-label">NIDN PENANDATANGAN</label><input type="text" id="su-nidn-ttd" class="pixel-input" placeholder="NIDN..." /></div>
-                  <div class="input-group full-width"><label class="pixel-label">KETERANGAN TAMBAHAN</label><input type="text" id="su-keterangan" class="pixel-input" placeholder="(opsional)" /></div>
+                  <div class="input-group"><label class="field-label">NAMA DOSEN</label><input type="text" id="su-nama" class="field-input" placeholder="Dr. Nama Lengkap..." /></div>
+                  <div class="input-group"><label class="field-label">NIDN DOSEN</label><input type="text" id="su-nidn" class="field-input" placeholder="0012345678" /></div>
+                  <div class="input-group"><label class="field-label">JABATAN</label><input type="text" id="su-jabatan" class="field-input" placeholder="Dosen Tetap..." /></div>
+                  <div class="input-group"><label class="field-label">PROGRAM STUDI</label><input type="text" id="su-prodi" class="field-input" placeholder="Bahasa Indonesia..." /></div>
+                  <div class="input-group span-2"><label class="field-label">PERIHAL UNDANGAN</label><input type="text" id="su-perihal" class="field-input" placeholder="Undangan Rapat..." /></div>
+                  <div class="input-group"><label class="field-label">NAMA PENANDATANGAN</label><input type="text" id="su-penandatangan" class="field-input" placeholder="Wakil Ketua I..." /></div>
+                  <div class="input-group"><label class="field-label">NIDN PENANDATANGAN</label><input type="text" id="su-nidn-ttd" class="field-input" placeholder="NIDN..." /></div>
+                  <div class="input-group span-2"><label class="field-label">KETERANGAN TAMBAHAN</label><input type="text" id="su-keterangan" class="field-input" placeholder="(opsional)" /></div>
                 </div>
-                <div id="su-result" class="generate-result hidden"></div>
-                <button class="pixel-btn btn-magenta full-width" id="btn-generate-su">⚡ GENERATE SURAT UNDANGAN</button>
+                <div id="su-result" class="alert hidden"></div>
+                <button class="btn btn-purple w-full mt-1" id="btn-gen-su">⚡ GENERATE SURAT UNDANGAN</button>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- PANEL ADMIN -->
+        <!-- ── PANEL: ADMIN ── -->
         <div id="panel-admin" class="panel">
-          <div class="window-frame form-frame">
-            <div class="window-titlebar"><span>⚙️ ADMIN PANEL — TAMBAH DOKUMEN KE INVENTORY</span></div>
-            <div class="window-content">
+          <div class="card form-card">
+            <div class="card-header">⚙️ ADMIN PANEL — TAMBAH DOKUMEN KE INVENTORY</div>
+            <div class="card-body">
               <div class="form-grid">
-                <div class="input-group"><label class="pixel-label">TARGET SHEET</label><select id="adm-sheet-select" class="pixel-input"></select></div>
-                <div class="input-group"><label class="pixel-label">KATEGORI</label><input type="text" id="adm-kategori" class="pixel-input" placeholder="SOP Akademik / Panduan..." /></div>
-                <div class="input-group full-width"><label class="pixel-label">JUDUL DOKUMEN</label><input type="text" id="adm-judul" class="pixel-input" placeholder="Nama dokumen lengkap..." /></div>
-                <div class="input-group full-width"><label class="pixel-label">GOOGLE DRIVE FILE ID</label><input type="text" id="adm-fileid" class="pixel-input" placeholder="Salin dari URL Drive: drive.google.com/file/d/ ► ID ◄ /view" /></div>
-                <div class="input-group full-width"><label class="pixel-label">DESKRIPSI</label><input type="text" id="adm-deskripsi" class="pixel-input" placeholder="Deskripsi singkat dokumen..." /></div>
+                <div class="input-group"><label class="field-label">TARGET SHEET</label>
+                  <select id="adm-sheet" class="field-input field-select">
+                    <option value="Dok_Akademik">Dok_Akademik</option>
+                    <option value="Dok_SOP">Dok_SOP</option>
+                    <option value="Surat_Tugas">Surat_Tugas</option>
+                    <option value="Surat_Undangan">Surat_Undangan</option>
+                  </select>
+                </div>
+                <div class="input-group"><label class="field-label">KATEGORI</label><input type="text" id="adm-kategori" class="field-input" placeholder="SOP Akademik / Panduan..." /></div>
+                <div class="input-group span-2"><label class="field-label">JUDUL DOKUMEN</label><input type="text" id="adm-judul" class="field-input" placeholder="Nama dokumen lengkap..." /></div>
+                <div class="input-group span-2"><label class="field-label">GOOGLE DRIVE FILE ID</label><input type="text" id="adm-fileid" class="field-input" placeholder="ID dari URL Drive: drive.google.com/file/d/ ► ID ◄ /view" /></div>
+                <div class="input-group span-2"><label class="field-label">DESKRIPSI</label><input type="text" id="adm-deskripsi" class="field-input" placeholder="Deskripsi singkat dokumen..." /></div>
               </div>
-              <div id="adm-result" class="generate-result hidden"></div>
-              <button class="pixel-btn btn-cyan full-width" id="btn-add-dokumen">+ ADD TO INVENTORY</button>
+              <div id="adm-result" class="alert hidden"></div>
+              <button class="btn btn-cyan w-full mt-1" id="btn-add-dok">+ ADD TO INVENTORY</button>
             </div>
           </div>
         </div>
 
       </main>
-    </div>
-  </div>
+    </div><!-- /.app-layout -->
+  </div><!-- /#screen-dashboard -->
 
-  <!-- MODAL -->
+  <!-- ══════════════════════════════════════
+       MODAL: DOCUMENT PREVIEW
+  ══════════════════════════════════════ -->
   <div id="modal-preview" class="modal hidden">
-    <div class="modal-overlay" id="modal-close-overlay"></div>
-    <div class="modal-window">
-      <div class="window-titlebar">
+    <div class="modal-backdrop" id="modal-backdrop"></div>
+    <div class="modal-box">
+      <div class="modal-header">
         <span id="modal-title">DOCUMENT VIEWER</span>
-        <button class="window-close" id="modal-close-btn">✕ CLOSE</button>
+        <button class="btn-icon" id="modal-close">✕ CLOSE</button>
       </div>
       <div class="modal-body">
-        <iframe id="preview-iframe" src="" title="Document Preview" allowfullscreen></iframe>
+        <iframe id="modal-iframe" src="" title="Document Preview" allowfullscreen></iframe>
       </div>
       <div class="modal-footer">
-        <a id="modal-download-btn" href="#" target="_blank" class="pixel-btn btn-green">⬇ DOWNLOAD FILE</a>
+        <a id="modal-download" href="#" target="_blank" class="btn btn-primary">⬇ DOWNLOAD FILE</a>
       </div>
     </div>
   </div>
 
+  <!-- TOAST NOTIFICATION -->
   <div id="toast" class="toast hidden"></div>
+
   <script src="js/app.js"></script>
 </body>
 </html>
