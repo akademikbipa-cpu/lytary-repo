@@ -25,7 +25,7 @@
       <div class="press-start-wrapper">
         <button class="btn-press-start" id="btn-goto-login">▶ PRESS START ◀</button>
       </div>
-      <div class="title-footer">© LYTARY v2.0</div>
+      <div class="title-footer">© LYTARY v3.0</div>
     </div>
   </div>
 
@@ -42,7 +42,6 @@
       <div class="login-card-body">
         <div class="login-avatar">🏛️</div>
         <p class="login-prompt">IDENTIFY YOURSELF, PLAYER!</p>
-
         <div class="input-group">
           <label class="field-label">◈ NIDN / USERNAME</label>
           <input type="text" id="input-nidn" class="field-input" placeholder="ENTER NIDN..." autocomplete="off" />
@@ -51,14 +50,12 @@
           <label class="field-label">◈ PASSWORD</label>
           <input type="password" id="input-password" class="field-input" placeholder="••••••••••••••" />
         </div>
-
-        <div id="login-error" class="alert alert-error hidden">❌ ACCESS DENIED! WRONG CODE!</div>
-
+        <div id="login-error" class="alert alert-error hidden">❌ ACCESS DENIED!</div>
         <div class="btn-row">
           <button class="btn btn-primary" id="btn-login">► CONTINUE</button>
           <button class="btn btn-ghost" id="btn-login-back">◄ BACK</button>
         </div>
-        <p class="login-footer">LIVES: ❤️ ❤️ ❤️ &nbsp;|&nbsp; LYTARY v2.0</p>
+        <p class="login-footer">LIVES: ❤️ ❤️ ❤️ &nbsp;|&nbsp; LYTARY v3.0</p>
       </div>
     </div>
   </div>
@@ -83,12 +80,23 @@
         </div>
 
         <nav class="sidebar-nav">
-          <div class="nav-section-label">── SELECT MENU ──</div>
+          <div class="nav-section-label">── MAIN MENU ──</div>
+          <button class="nav-item" data-panel="panel-dashboard">
+            <span>📊</span> DASHBOARD
+          </button>
           <button class="nav-item active" data-panel="panel-repositori">
             <span>📁</span> REPOSITORI
           </button>
           <button class="nav-item" data-panel="panel-surat">
             <span>✉️</span> SURAT & UNDANGAN
+          </button>
+
+          <div class="nav-section-label" style="margin-top:.9rem;">── ADMIN AREA ──</div>
+          <button class="nav-item admin-only hidden" data-panel="panel-users">
+            <span>👥</span> MANAJEMEN USER
+          </button>
+          <button class="nav-item admin-only hidden" data-panel="panel-log">
+            <span>📋</span> LOG AKTIVITAS
           </button>
           <button class="nav-item admin-only hidden" data-panel="panel-admin">
             <span>⚙️</span> ADMIN PANEL
@@ -106,14 +114,71 @@
 
         <!-- HUD BAR -->
         <div class="hud-bar">
-          <span class="hud-title" id="hud-panel-name">REPOSITORI DOKUMEN</span>
+          <span class="hud-title" id="hud-panel-name">DASHBOARD</span>
           <div class="hud-right">
+            <!-- Search Box -->
+            <div class="search-box" id="search-box">
+              <input type="text" id="search-input" class="search-input" placeholder="🔍 Cari dokumen..." autocomplete="off" />
+              <div id="search-results" class="search-dropdown hidden"></div>
+            </div>
             <span class="hud-clock" id="hud-clock">00:00:00</span>
             <span class="hud-badge" id="hud-role-badge">PLAYER</span>
           </div>
         </div>
 
-        <!-- ── PANEL: REPOSITORI ── -->
+        <!-- ════════════════════════════════
+             PANEL: DASHBOARD (NEW)
+        ════════════════════════════════ -->
+        <div id="panel-dashboard" class="panel">
+
+          <!-- Stat Cards -->
+          <div class="stat-grid" id="stat-grid">
+            <div class="stat-card stat-teal">
+              <div class="stat-icon">📄</div>
+              <div class="stat-value" id="stat-total-dok">—</div>
+              <div class="stat-label">Total Dokumen</div>
+            </div>
+            <div class="stat-card stat-green">
+              <div class="stat-icon">👥</div>
+              <div class="stat-value" id="stat-total-users">—</div>
+              <div class="stat-label">User Aktif</div>
+            </div>
+            <div class="stat-card stat-amber">
+              <div class="stat-icon">📜</div>
+              <div class="stat-value" id="stat-st-bulan">—</div>
+              <div class="stat-label">Surat Tugas Bulan Ini</div>
+            </div>
+            <div class="stat-card stat-purple">
+              <div class="stat-icon">📨</div>
+              <div class="stat-value" id="stat-su-bulan">—</div>
+              <div class="stat-label">Undangan Bulan Ini</div>
+            </div>
+          </div>
+
+          <!-- Dokumen Breakdown + Recent Activity -->
+          <div class="dash-grid">
+            <!-- Breakdown -->
+            <div class="card">
+              <div class="card-header">📦 INVENTORY DOKUMEN</div>
+              <div class="card-body" id="dash-dok-breakdown">
+                <div class="state-loading"><p>Loading...</p></div>
+              </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card">
+              <div class="card-header">⚡ AKTIVITAS TERBARU</div>
+              <div class="card-body p-0" id="dash-recent-log">
+                <div class="state-loading"><p>Loading...</p></div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /#panel-dashboard -->
+
+        <!-- ════════════════════════════════
+             PANEL: REPOSITORI
+        ════════════════════════════════ -->
         <div id="panel-repositori" class="panel active">
           <div class="panel-toolbar">
             <span class="field-label">SELECT STAGE ▼</span>
@@ -125,7 +190,9 @@
           </div>
         </div>
 
-        <!-- ── PANEL: SURAT ── -->
+        <!-- ════════════════════════════════
+             PANEL: SURAT
+        ════════════════════════════════ -->
         <div id="panel-surat" class="panel">
           <div class="sub-tabs">
             <button class="sub-tab active" data-subtab="tab-surat-tugas">📜 SURAT TUGAS</button>
@@ -139,7 +206,6 @@
               <div class="state-loading"><p>FETCHING MAIL...</p></div>
             </div>
           </div>
-
           <div id="tab-surat-undangan" class="sub-panel">
             <div id="list-surat-undangan" class="surat-list">
               <div class="state-loading"><p>FETCHING MAIL...</p></div>
@@ -185,10 +251,93 @@
               </div>
             </div>
           </div>
-        </div>
+        </div><!-- /#panel-surat -->
 
-        <!-- ── PANEL: ADMIN ── -->
-        <div id="panel-admin" class="panel">
+        <!-- ════════════════════════════════
+             PANEL: MANAJEMEN USER (NEW)
+        ════════════════════════════════ -->
+        <div id="panel-users" class="panel admin-only hidden">
+
+          <div class="panel-toolbar">
+            <span class="field-label">DAFTAR USER SISTEM</span>
+            <button class="btn btn-primary btn-sm" id="btn-show-add-user">+ TAMBAH USER</button>
+            <button class="btn btn-cyan btn-sm" id="btn-refresh-users">↺ RELOAD</button>
+          </div>
+
+          <!-- Form Tambah / Edit User -->
+          <div id="user-form-wrap" class="card form-card mb-1 hidden">
+            <div class="card-header" id="user-form-title">👤 TAMBAH USER BARU</div>
+            <div class="card-body">
+              <input type="hidden" id="uf-id" />
+              <div class="form-grid">
+                <div class="input-group"><label class="field-label">NAMA LENGKAP</label><input type="text" id="uf-nama" class="field-input" placeholder="Dr. Nama Lengkap..." /></div>
+                <div class="input-group"><label class="field-label">NIDN / USERNAME</label><input type="text" id="uf-nidn" class="field-input" placeholder="0012345678" /></div>
+                <div class="input-group"><label class="field-label">PASSWORD</label><input type="text" id="uf-password" class="field-input" placeholder="Kosongkan = tidak diubah (edit)" /></div>
+                <div class="input-group"><label class="field-label">ROLE</label>
+                  <select id="uf-role" class="field-input field-select">
+                    <option value="dosen">Dosen</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </div>
+                <div class="input-group"><label class="field-label">PROGRAM STUDI</label><input type="text" id="uf-prodi" class="field-input" placeholder="Bahasa Indonesia..." /></div>
+                <div class="input-group"><label class="field-label">EMAIL</label><input type="email" id="uf-email" class="field-input" placeholder="nama@kampus.ac.id" /></div>
+              </div>
+              <div id="uf-result" class="alert hidden"></div>
+              <div class="btn-row" style="margin-bottom:0">
+                <button class="btn btn-primary" id="btn-save-user">💾 SIMPAN USER</button>
+                <button class="btn btn-ghost" id="btn-cancel-user">✕ BATAL</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- User Table -->
+          <div class="card">
+            <div class="card-body p-0">
+              <div id="users-table-wrap" class="table-wrap">
+                <div class="state-loading"><p>Loading users...</p></div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /#panel-users -->
+
+        <!-- ════════════════════════════════
+             PANEL: LOG AKTIVITAS (NEW)
+        ════════════════════════════════ -->
+        <div id="panel-log" class="panel admin-only hidden">
+
+          <div class="panel-toolbar">
+            <span class="field-label">LOG AKTIVITAS SISTEM</span>
+            <select id="log-filter" class="field-input field-select" style="width:auto;padding:.38rem .8rem;font-size:.74rem;">
+              <option value="">Semua Aktivitas</option>
+              <option value="LOGIN">Login</option>
+              <option value="ADD_DOKUMEN">Tambah Dokumen</option>
+              <option value="DELETE_DOKUMEN">Hapus Dokumen</option>
+              <option value="GENERATE_SURAT">Generate Surat</option>
+              <option value="ADD_USER">Tambah User</option>
+              <option value="UPDATE_USER">Edit User</option>
+              <option value="ACTIVATE_USER">Aktifkan User</option>
+              <option value="DEACTIVATE_USER">Nonaktifkan User</option>
+              <option value="DELETE_USER">Hapus User</option>
+              <option value="CHANGE_PASSWORD">Ganti Password</option>
+            </select>
+            <button class="btn btn-cyan btn-sm" id="btn-refresh-log">↺ RELOAD</button>
+          </div>
+
+          <div class="card">
+            <div class="card-body p-0">
+              <div id="log-table-wrap" class="table-wrap">
+                <div class="state-loading"><p>Loading log...</p></div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /#panel-log -->
+
+        <!-- ════════════════════════════════
+             PANEL: ADMIN PANEL
+        ════════════════════════════════ -->
+        <div id="panel-admin" class="panel admin-only hidden">
           <div class="card form-card">
             <div class="card-header">⚙️ ADMIN PANEL — TAMBAH DOKUMEN KE INVENTORY</div>
             <div class="card-body">
@@ -210,7 +359,7 @@
               <button class="btn btn-cyan w-full mt-1" id="btn-add-dok">+ ADD TO INVENTORY</button>
             </div>
           </div>
-        </div>
+        </div><!-- /#panel-admin -->
 
       </main>
     </div><!-- /.app-layout -->
@@ -235,7 +384,7 @@
     </div>
   </div>
 
-  <!-- TOAST NOTIFICATION -->
+  <!-- TOAST -->
   <div id="toast" class="toast hidden"></div>
 
   <script src="js/app.js"></script>

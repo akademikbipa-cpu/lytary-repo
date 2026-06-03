@@ -798,3 +798,269 @@ input, select { font-family: inherit; }
   .surat-card { flex-direction: column; align-items: flex-start; }
   .login-card { margin: .75rem; }
 }
+
+/* ============================================================
+   LYTARY v3.0 ADDITIONS
+   Dashboard, Search, User Table, Log Table
+   ============================================================ */
+
+/* ── SEARCH BOX (HUD) ── */
+.search-box { position: relative; }
+
+.search-input {
+  width: 220px;
+  padding: .38rem .85rem;
+  background: var(--slate-50);
+  border: 1.5px solid var(--slate-200);
+  border-radius: 99px;
+  font-size: .78rem;
+  color: var(--slate-900);
+  outline: none;
+  transition: border-color .15s, box-shadow .15s, width .25s;
+}
+
+.search-input:focus {
+  border-color: var(--teal-500);
+  box-shadow: 0 0 0 3px var(--teal-ring);
+  width: 280px;
+}
+
+.search-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  width: 360px;
+  background: #fff;
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  z-index: 500;
+  max-height: 380px;
+  overflow-y: auto;
+}
+
+.search-result-item {
+  display: flex;
+  align-items: flex-start;
+  gap: .65rem;
+  padding: .72rem 1rem;
+  border-bottom: 1px solid var(--slate-100);
+  cursor: pointer;
+  transition: background .12s;
+}
+
+.search-result-item:last-child { border-bottom: none; }
+.search-result-item:hover { background: var(--teal-100); }
+
+.search-result-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: .1rem; }
+
+.search-result-title {
+  font-size: .8rem;
+  font-weight: 700;
+  color: var(--slate-900);
+  margin-bottom: .14rem;
+  line-height: 1.3;
+}
+
+.search-result-meta { font-size: .68rem; color: var(--slate-400); }
+
+.search-empty {
+  padding: 1.5rem;
+  text-align: center;
+  font-size: .78rem;
+  color: var(--slate-400);
+}
+
+/* ── STAT GRID (Dashboard) ── */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.3rem;
+}
+
+.stat-card {
+  border-radius: var(--radius-lg);
+  padding: 1.35rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(0,0,0,.12);
+  position: relative;
+  overflow: hidden;
+  transition: transform .2s, box-shadow .2s;
+}
+
+.stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.15); }
+
+.stat-card::after {
+  content: '';
+  position: absolute;
+  top: -20px; right: -20px;
+  width: 90px; height: 90px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.1);
+}
+
+.stat-teal   { background: linear-gradient(135deg, #0d9488, #14b8a6); }
+.stat-green  { background: linear-gradient(135deg, #059669, #10b981); }
+.stat-amber  { background: linear-gradient(135deg, #b45309, #f59e0b); }
+.stat-purple { background: linear-gradient(135deg, #6d28d9, #8b5cf6); }
+
+.stat-icon  { font-size: 1.6rem; }
+.stat-value { font-size: 2rem; font-weight: 800; font-family: var(--font-mono); line-height: 1; }
+.stat-label { font-size: .68rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; opacity: .85; }
+
+/* ── DASHBOARD GRID ── */
+.dash-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* Breakdown rows */
+.breakdown-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .72rem 0;
+  border-bottom: 1px solid var(--slate-100);
+  font-size: .82rem;
+}
+
+.breakdown-row:last-child { border-bottom: none; }
+
+.breakdown-label { display: flex; align-items: center; gap: .5rem; font-weight: 600; color: var(--slate-900); }
+.breakdown-bar-wrap { flex: 1; margin: 0 1rem; height: 6px; background: var(--slate-100); border-radius: 99px; overflow: hidden; }
+.breakdown-bar { height: 100%; border-radius: 99px; transition: width .6s ease; }
+.breakdown-count { font-family: var(--font-mono); font-size: .75rem; font-weight: 700; color: var(--teal-700); min-width: 28px; text-align: right; }
+
+/* Recent log mini list */
+.mini-log-item {
+  display: flex;
+  align-items: flex-start;
+  gap: .65rem;
+  padding: .72rem 1rem;
+  border-bottom: 1px solid var(--slate-100);
+  font-size: .78rem;
+}
+
+.mini-log-item:last-child { border-bottom: none; }
+
+.log-action-badge {
+  font-size: .58rem;
+  font-weight: 700;
+  padding: .2rem .55rem;
+  border-radius: 99px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.badge-login    { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+.badge-dokumen  { background: var(--teal-100); color: var(--teal-900); border: 1px solid #99f6e4; }
+.badge-surat    { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
+.badge-user     { background: #f5f3ff; color: #5b21b6; border: 1px solid #ddd6fe; }
+.badge-default  { background: var(--slate-100); color: var(--slate-600); border: 1px solid var(--slate-200); }
+
+.mini-log-detail { flex: 1; min-width: 0; }
+.mini-log-who  { font-weight: 600; color: var(--slate-900); }
+.mini-log-what { color: var(--slate-400); font-size: .72rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mini-log-when { font-family: var(--font-mono); font-size: .65rem; color: var(--slate-400); flex-shrink: 0; }
+
+/* ── DATA TABLE (Users & Log) ── */
+.table-wrap { overflow-x: auto; }
+
+table.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .78rem;
+}
+
+table.data-table thead tr {
+  background: var(--slate-50);
+  border-bottom: 2px solid var(--slate-200);
+}
+
+table.data-table thead th {
+  padding: .68rem 1rem;
+  text-align: left;
+  font-size: .65rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--slate-600);
+  white-space: nowrap;
+}
+
+table.data-table tbody tr {
+  border-bottom: 1px solid var(--slate-100);
+  transition: background .12s;
+}
+
+table.data-table tbody tr:last-child { border-bottom: none; }
+table.data-table tbody tr:hover { background: var(--teal-100); }
+
+table.data-table tbody td {
+  padding: .72rem 1rem;
+  color: var(--slate-900);
+  vertical-align: middle;
+}
+
+.user-avatar-sm {
+  width: 30px; height: 30px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--teal-900), var(--teal-700));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  margin-right: .5rem;
+  vertical-align: middle;
+}
+
+.role-badge {
+  font-size: .6rem;
+  font-weight: 700;
+  padding: .2rem .55rem;
+  border-radius: 99px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.role-admin { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+.role-dosen { background: var(--teal-100); color: var(--teal-900); border: 1px solid #99f6e4; }
+
+.status-dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  margin-right: .35rem;
+  vertical-align: middle;
+}
+.dot-active   { background: #10b981; box-shadow: 0 0 0 2px rgba(16,185,129,.2); }
+.dot-inactive { background: #94a3b8; }
+
+.table-actions { display: flex; gap: .35rem; align-items: center; }
+
+/* Log-specific table */
+.log-ts { font-family: var(--font-mono); font-size: .68rem; color: var(--slate-400); white-space: nowrap; }
+
+/* ── MISC UTILITIES (v3) ── */
+.mb-1 { margin-bottom: 1rem; }
+.p-0  { padding: 0 !important; }
+.card-body.p-0 { padding: 0 !important; }
+
+@media (max-width: 1024px) {
+  .stat-grid  { grid-template-columns: repeat(2, 1fr); }
+  .dash-grid  { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) {
+  .stat-grid     { grid-template-columns: 1fr 1fr; }
+  .search-input  { width: 140px; }
+  .search-input:focus { width: 180px; }
+  .search-dropdown { width: 280px; right: -60px; }
+}
